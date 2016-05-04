@@ -50,3 +50,15 @@ class NoteTakingEntry:
 		obj = Database()
 		obj.delete_note_for_id(note)
 
+	def export_json(self):
+		obj = Database()
+		obj.export_to_json()
+
+	def export_csv(self):
+		obj = Database()
+		obj.export_to_csv()
+
+	def upload_firebase(self):
+		obj = Database()
+		obj.upload_notes()
+

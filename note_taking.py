@@ -16,8 +16,8 @@ Options:
 """
 
 import sys
-from cmd import Cmd
 # from docopt import docopt, DocoptExit
+from cmd import Cmd
 from functions import NoteTakingEntry
 
 
@@ -134,6 +134,46 @@ class NoteTaking(Cmd):
             print "List Does not accept any arguments"
             return 0
 
+    def do_exportjson(self, args):
+        """ Lets you export to a JSON file
+            Takes no argument.
+            Create a .js file with all the db entries
+        """
+        if len(args) == 0:
+            NoteTakingEntry().export_json()
+            print 'Your Have Exported The current state of the DB to the notetakingObject.json'
+            return 0
+        else:
+            print "exportjson does not accept any arguments"
+            return 0
+
+    def do_exportcsv(self, args):
+        """ Lets you export to a CSV file
+            Takes no argument.
+            Create a .csv file with all the db entries
+        """
+        if len(args) == 0:
+            NoteTakingEntry().export_csv()
+            print 'Your Have Exported The current state of the DB to the notetaking.csv'
+            return 0
+        else:
+            print "exportcsv does not accept any arguments"
+            return 0
+
+    def do_syncnotes(self, args):
+        """ Lets you synchronise with FireBase online datastore
+            Takes no argument.
+            Create a instance of that db in FireBase
+        """
+        if len(args) == 0:
+            NoteTakingEntry().upload_firebase()
+            print 'Your Have Uploaded to FirBbase'
+            return 0
+        else:
+            print "syncnotes does not accept any arguments"
+            return 0
+
+
     def do_next(self, args):
         """It is invoked to see the next set of data in the current running query"""
         if len(args) == 0:
@@ -166,6 +206,9 @@ def introduction():
     print v + "3 - deletenote".center(78) + v
     print v + "4 - searchnote".center(78) + v
     print v + "5 - listnotes ".center(78) + v
+    print v + "6 - exportjson".center(78) + v
+    print v + "6 - exportcsv ".center(78) + v
+    print v + "6 - syncnotes ".center(78) + v
     print c + "-" * 78 + c
     print v + "OTHER COMMANDS".center(78) + v
     print c + "-" * 78 + c
