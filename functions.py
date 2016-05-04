@@ -54,11 +54,15 @@ class NoteTakingEntry:
 		obj = Database()
 		obj.export_to_json()
 
-	def export_csv(self):
-		obj = Database()
-		obj.export_to_csv()
+	# def export_csv(self):
+	# 	obj = Database()
+	# 	obj.export_to_csv()
 
 	def upload_firebase(self):
 		obj = Database()
 		obj.upload_notes()
 
+	def import_json(self):
+		obj = Database()
+		alr_exist = obj.import_to_json()
+		return alr_exist

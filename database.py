@@ -70,21 +70,6 @@ class Database:
 
         self.cursor.execute("DELETE FROM notes WHERE id == ('%i')" % (int(args)))
         self.conn.commit()
-    
-    # def dict_factory(cursor, row):
-    #     d = {}
-
-    #     for idx, col in enumerate(cursor.description):
-    #         d[col[0]] = row[idx]
-    #         return d
-    #     connection = sqlite3.connect("sample.db")
-    #     connection.row_factory = dict_factory
-    #     cursor = connection.cursor()
-    #     cursor.execute("select * from sample")
-    #     # fetch all or one we'll go for all.
-    #     results = cursor.fetchall()
-    #     print results
-    #     connection.close()
 
     def upload_notes(self):
        
@@ -134,6 +119,20 @@ class Database:
     #     f = open(object_file, 'w')
     #     print >> f,writer
 
+    def import_to_json(self): #import from and export to
+        
+        json_file = "import.json"
+        imported_file = json.load(open(json_file))
+
+        for row in imported_file:
+            third = row['entry']
+            try:
+                with self.conn:
+                    #insert a row of data
+                    self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))
+            except sqlite3.IntegrityError:
+                already_exist += 1
+                
 
 
 

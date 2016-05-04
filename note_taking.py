@@ -147,18 +147,33 @@ class NoteTaking(Cmd):
             print "exportjson does not accept any arguments"
             return 0
 
-    def do_exportcsv(self, args):
-        """ Lets you export to a CSV file
+
+    def do_importjson(self, args):
+        """ Lets you import from a JSON file
             Takes no argument.
-            Create a .csv file with all the db entries
+            Populates table from .js file
         """
         if len(args) == 0:
-            NoteTakingEntry().export_csv()
-            print 'Your Have Exported The current state of the DB to the notetaking.csv'
-            return 0
+            already = NoteTakingEntry().import_json()
+            print 'Your Have Imported some values. But {} already Exists'.format(already)
         else:
-            print "exportcsv does not accept any arguments"
+            print "importjson does not accept any arguments"
             return 0
+
+
+
+    # def do_exportcsv(self, args):
+    #     """ Lets you export to a CSV file
+    #         Takes no argument.
+    #         Create a .csv file with all the db entries
+    #     """
+    #     if len(args) == 0:
+    #         NoteTakingEntry().export_csv()
+    #         print 'Your Have Exported The current state of the DB to the notetaking.csv'
+    #         return 0
+    #     else:
+    #         print "exportcsv does not accept any arguments"
+    #         return 0
 
     def do_syncnotes(self, args):
         """ Lets you synchronise with FireBase online datastore
@@ -207,7 +222,7 @@ def introduction():
     print v + "4 - searchnote".center(78) + v
     print v + "5 - listnotes ".center(78) + v
     print v + "6 - exportjson".center(78) + v
-    print v + "6 - exportcsv ".center(78) + v
+    print v + "6 - importjson".center(78) + v
     print v + "6 - syncnotes ".center(78) + v
     print c + "-" * 78 + c
     print v + "OTHER COMMANDS".center(78) + v
