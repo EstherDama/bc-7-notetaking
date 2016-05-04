@@ -44,8 +44,14 @@ class Database:
                  print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
     def search_for_string(self, args):
-        self.cursor.execute("SELECT * FROM notes WHERE entry == ('%s')" % (args))
+        a = args
+        # import ipdb
+        # ipdb.set_trace()
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%'".format(args))
+
+
         for row in self.cursor.fetchall():
+            if a in row[2]:
                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
     def view_note_for_id(self, args):

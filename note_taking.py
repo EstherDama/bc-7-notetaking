@@ -181,15 +181,7 @@ def introduction():
 if __name__ == '__main__':
 	NoteTaking().cmdloop()
 
-
-
-
-
-
-
-
-
 # if opt['--interactive']:
-#     Journal().cmdloop()
+#     NoteTaking().cmdloop()
 
 # print(opt)
