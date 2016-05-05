@@ -38,15 +38,14 @@ class Database():
             self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), note))
 
     
-    def list_with_a_limit(self, args):
+    def list_with_a_limit(self, count):
         """
-        
+        Query to give a list of notes
+        If No limit is passed then everything is displayed
         """
-            self.cursor.execute("SELECT * FROM notes LIMIT ('%i')" % (int(args)))
-            # data = c.fetchall()
-            # print data
-            for row in self.cursor.fetchall():
-                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+        self.cursor.execute("SELECT * FROM notes LIMIT ('%i')" % (int(count)))
+        for row in self.cursor.fetchall():
+             print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
     def next_for_list_with_limit(self, args1, args2):
             self.cursor.execute("SELECT * FROM notes LIMIT '{}','{}'".format(int(args1), int(args2)))
@@ -55,19 +54,24 @@ class Database():
 
 
     def search_with_limit(self, args1, args2):
-            self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}'".format(args1, int(args2)))
-            # data = c.fetchall()
-            # print data
-            for row in self.cursor.fetchall():
-                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+        """
+        Query to give a list of notes searched by a key value
+        If No limit is passed then everything is displayed
+        """
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}'".format(args1, int(args2)))
+        for row in self.cursor.fetchall():
+             print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def next_for_search_with_limit(self, args, args1, args2):
-        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}','{}'".format(args, int(args1), int(args2)))
+    def next_for_search_with_limit(self, args, args1, count):
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}','{}'".format(args, int(args1), int(count)))
         for row in self.cursor.fetchall():
              print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
     def view_note_for_id(self, args):
-
+        """
+        Query to give a list of notes searched by a key value
+        If No limit is passed then everything is displayed
+        """
         self.cursor.execute("SELECT * FROM notes WHERE id == ('%i')" % (int(args)))
         for row in self.cursor.fetchall():
                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])

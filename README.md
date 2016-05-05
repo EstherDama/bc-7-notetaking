@@ -1,92 +1,46 @@
 # bc-7-notetaking
-## Synopsis
-
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
-
-## Code Example
-
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-## Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
-
-## Installation
-
-Provide code examples and explanations of how to get the project.
-
-## API Reference
-
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
-
-## Contributors
-
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
-
-## License
-
-A short snippet describing the license (MIT, Apache, etc.)
-
-``Scrible`` Python *Console application* for taking notes
+Python ``NoteTaking`` *Console application* 
 ======================================================================
 
-    New in version 0.0.3:
+## Introduction
+*  **`NoteTaking`** is a Python Console Application.
+*  These are its features;
+  *  Allows the creation of notes
+  *  Allows the viewing of a note using its specific id
+  *  Allows the deleting a note using its specific id
+  *  Allows search of notes with a search string
+  *  Allows listing of all notes or a few notes set by your limit
+  *  Allows exporting to a JSON file
+  *  Image importing from a JSON file
+  *  Image syncing of notes with online datastore
+  *  Allows for next to show next results of the currently executing query 
 
-    - Beautiful ui with added commands such as ``sync`` for automatic 
-      synchronization of notes
-
-    New in version 0.0.2:
-
-    - Better listing and searching options with ``--limit`` to get
-      specific number of items
+**NoteTaking** allows you quickly create short notes, allows for easy manipulation of the notes and back-up notes on FireBase.
 
 
-**Scrible** enables you create short and descriptive notes with cloud backup
-*easily*:
-
-
-Launching program
+Commands for the program
 ======================================================================
-
-    scrible --start
 
 .. code:: python
-
-    """Scrible.
-
-    Usage:
-	    createnote  (<note_title>) [-m]
-	    viewnote    (<note_id>) [-m]
-	    deletenote  (<note_id> | -a)
-	    searchnotes (<query_string>) [(--limit <items>)]
-	    viewnote    (<note_id>)
-	    listnotes   [(--limit <items>)]
-	    next
-	    export      (<filename>)
-	    import      (<filename>)
-	    sync 
-	    scrible (-s | --start)
-	    scrible (-h | --help | --version)
-	Options:
-	    -s, --start  Interactive Mode
-	    -h, --help  Show this screen and exit.
-	    -m          Starts creating note body
-
-    """
-
+"""
+This shows how to use the various commands on NoteTaking Console Application
+Usage:
+    notetaking createnote <entry>
+    notetaking viewnote <note_id>
+    notetaking deletenote <note_id>
+    notetaking searchnote <query_string> [--limit]
+    notetaking listnotes [--limit]
+    notetaking export 
+    notetaking import 
+    notetaking sync 
+"""
 As you can see, the commands to use are few and easy to remember.
 
 Installation
 ======================================================================
-
-From the terminal use `pip <http://pip-installer.org>`_ or easy_install::
-Aftwerwards copy the database to the install directory `scribler.db`
-
-    pip install -e git+https://github.com/jaxtreme01/Scrible#egg=scrible
+From the requirements.txt install all the modules
+This is done by use of `pip <module>` on the Terminal
+Aftwerwards copy the database to the install directory `notetaking.db`
 
 Testing
 ======================================================================
@@ -100,56 +54,42 @@ Usage pattern format
 
 **Usage pattern** depends on the command you want to execute
 
-- View specific notes 
+- View a specific note 
 .. code:: python
 
-	viewnote (<note_id>) [-m]
+	viewnote <note_id>
 
-- Create note with just title 
+- Create a single note 
 .. code:: python 
 
-	createnote  (<note_title>)
+	createnote <entry>
 
-- Create note with title and body
+
+- Delete a specific note
 .. code:: python 
 
-	createnote  (<note_title>) [-m]
+	deletenote <note_id>
 
-- Delete notes
+- Search notes with a query string and optional limit
 .. code:: python 
 
-	deletenote  (<note_id> | -a)
+	searchnote <query_string> [--limit]
 
-- Search notes
-.. code:: python 
-
-	searchnotes (<query_string>) [(--limit <items>)]
-
-- List notes
+- List all notes or optional limit of number of notes
 .. code:: python 
 
 	listnotes [(--limit <items>)]
 
-- Import notes
+- Import notes from a JSON file
 .. code:: python 
 
-	import (<filename>)
+	import 
 
-- Export notes
+- Export notes to a JSON file
 .. code:: python 
 
-	export (<filename>)
+	export 
 
-- Manually sync notes
+- Manually sync notes with Firebase
 
 	sync 
-
-
-
-
-
-
-
-
-
-

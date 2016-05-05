@@ -15,7 +15,9 @@ import sys
 from cmd import Cmd
 from functions import NoteTakingEntry
 from colorama import Fore, Back, Style
-
+            
+flag_limit_list = 0
+limit_set_list = 0
 
 class NoteTaking(Cmd):
     """ This is a Simple Console Note Taking Application.
