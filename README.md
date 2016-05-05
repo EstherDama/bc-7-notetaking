@@ -62,24 +62,24 @@ Usage pattern format
 
 - Create a single note 
 ```
-	createnote (<entry>)
+	createnote <entry>
 ```
 
 
 - Delete a specific note
 ``` 
 
-	deletenote (<note_id>)
+	deletenote <note_id>
 ```
 - Search notes with a query string and optional limit
 ``` 
 
-	searchnote (<query_string>) ([--limit])
+	searchnote <query_string> [--limit]
 ```
 - List all notes or optional limit of number of notes
 ``` 
 
-	listnotes (--limit )
+	listnotes [--limit]
 ```
 - Import notes from a JSON file
 ``` 
