@@ -18,6 +18,10 @@ from colorama import Fore, Back, Style
             
 flag_limit_list = 0
 limit_set_list = 0
+flag_limit_search = 0 #shows where the limit will start from
+limit_set_search = 0
+search_query_string = 'hi'
+what_is_running = 0 #if this is 2 then search is running and if this is 1 then list is running
 
 class NoteTaking(Cmd):
     """ This is a Simple Console Note Taking Application.
@@ -38,30 +42,31 @@ class NoteTaking(Cmd):
         self.intro  = introduction() 
   
 
-    def do_createnote(self, args):
+    def do_createnote(self, entry):
         """ Creates a new note.
             Takes an argument  createnote <note_content>.
             Stores Created Note in Database
         """
-        if len(args) == 0:
+       
+        if len(entry) == 0:
             print Fore.YELLOW + "Usage: createnote <entry>"
             print Fore.RESET
         else:
-            NoteTakingEntry().create_note(args)
+            NoteTakingEntry().create_note(entry)
             print Fore.GREEN + 'Your Note has been Saved'
             print Fore.RESET
 
 
-    def do_viewnote(self, args):
+    def do_viewnote(self, note_id):
         """ Lets you view an already existing note.
             Takes an argument  viewnote <note_id>.
             Gets the Note with the specified ID from the Database
         """
-        list_args = args.split()
+        list_args = note_id.split()
         if len(list_args) == 1:
             try:
                 print Fore.GREEN + 'Note:'
-                NoteTakingEntry().view_one_note(args)
+                NoteTakingEntry().view_one_note(note_id)
                 print Fore.RESET
             except ValueError:
                 print Fore.YELLOW + "Usage: viewnote <note_id>"
@@ -71,16 +76,16 @@ class NoteTaking(Cmd):
             print Fore.RESET
 
 
-    def do_deletenote(self, args):
+    def do_deletenote(self, note_id):
         """ Lets you delete an already existing note.
             Takes an argument  deletenote <note_id>.
             Deletes the Note with the specified ID from the Database
         """
-        list_args = args.split()
+        list_args = note_id.split()
         if len(list_args) == 1:
             try:
-                print Fore.GREEN + 'Deleted Note:{}'.format(args)
-                NoteTakingEntry().delete_one_note(args)
+                NoteTakingEntry().delete_one_note(note_id)                
+                print Fore.GREEN + 'Deleted Note:{}'.format(note_id)
                 print Fore.RESET
             except ValueError:
                 print Fore.YELLOW + """Usage: deletenote <note_id>"""
@@ -90,21 +95,36 @@ class NoteTaking(Cmd):
             print Fore.YELLOW + """Usage: deletenote <note_id>"""
             print Fore.RESET
 
-    def do_searchnote(self, args):
+    def do_searchnote(self, var_args):
         """ Lets you search for an already existing note.
             Takes an argument  searchnotes <query_string>.
             View a formatted list of all the notes that can be identified by the query string
             searchnotes has a --limit parameter for setting the number of items to display in the resulting list
+            Usage: searchnote <query_string> [--limit] 
         """
-        list_args = args.split()
+        global limit_set_search
+        global flag_limit_search
+        global search_query_string        
+        list_args = var_args.split()
         if len(list_args) == 1:
-            NoteTakingEntry().search_limit(args, -1)
+            print Fore.GREEN + "Notes:"
+            NoteTakingEntry().search_limit(var_args, -1)
+            print Fore.RESET
         elif len(list_args) == 2:
             try:
                 search_string = list_args[0]
                 limit_set = list_args[1]
-                print Fore.GREEN + "Notes:"
-                NoteTakingEntry().search_limit(search_string, int(limit_set)) 
+
+
+
+                limit_set_search = int(list_args[1])
+                flag_limit_search += int(list_args[1])
+                search_query_string = list_args[0]
+
+                print Fore.GREEN + "You have set the limit to: {}".format(limit_set_search)
+                NoteTakingEntry().search_limit(search_string, int(limit_set))
+                global what_is_running 
+                what_is_running = 2 
                 print Fore.RESET
             except ValueError:
                 print Fore.YELLOW + "Usage: searchnote <query_string> [--limit]" 
@@ -115,14 +135,14 @@ class NoteTaking(Cmd):
             print Fore.RESET
             
 
-    def do_listnotes(self, args):
+    def do_listnotes(self, var_args):
         """ Lets you view a formatted list of all the notes taken.
             Takes no argument.
             View a formatted list of all the notes that have been taken.
             listnotes has a --limit parameter for setting the number of items to display in the resulting list
 
         """
-        list_args = args.split()
+        list_args = var_args.split()
         if len(list_args) == 0:
             print Fore.GREEN + "Notes:"
             NoteTakingEntry().list_limit(-1)
@@ -131,11 +151,13 @@ class NoteTaking(Cmd):
             try:
                 global limit_set_list
                 global flag_limit_list
-                limit_set_list = int(args)
-                flag_limit_list += int(args)
+                limit_set_list = int(var_args)
+                flag_limit_list += int(var_args)
 
                 print Fore.GREEN + "You have set the limit to: {}".format(limit_set_list) 
                 NoteTakingEntry().list_limit(limit_set_list)
+                global what_is_running 
+                what_is_running = 1
                 print Fore.RESET
                 #Add things here
             except ValueError:
@@ -147,40 +169,49 @@ class NoteTaking(Cmd):
             print Fore.RESET
 
 
-    def do_export(self, args):
+    def do_export(self, file_name):
         """ Lets you export to a JSON file
             Takes no argument.
             Create a .js file with all the db entries
         """
-        if len(args) == 0:
+        list_args = file_name.split()
+        if len(list_args) == 0:
             print Fore.GREEN + 'Your Have Exported The current state of the DB to the notetakingObject.json'
             NoteTakingEntry().export_json()
             print Fore.RESET
+
+        # elif len(list_args) ==1:
+
+        #     print "I should work on this!!!!"
+
         else:
             print Fore.YELLOW + "Usage: export"
             print Fore.RESET
 
 
-    def do_import(self, args):
+    def do_import(self, file_name):
         """ Lets you import from a JSON file
             Takes no argument.
             Populates table from .js file
         """
-        if len(args) == 0:
-            print Fore.GREEN + 'Your Have Imported from JSON'
+        list_args = file_name.split()
+        if len(list_args) == 0:
+            print Fore.GREEN + 'Your Have Imported from JSON import.json'
             NoteTakingEntry().import_json() 
             print Fore.RESET
+        elif len(list_args) ==1:
+            print "I should work on this!!!!"        
         else:
             print Fore.YELLOW + "Usage: import"
             print Fore.RESET
 
 
-    def do_sync(self, args):
+    def do_sync(self, any_args):
         """ Lets you synchronise with FireBase online datastore
             Takes no argument.
             Create a instance of that db in FireBase
         """
-        if len(args) == 0:
+        if len(any_args) == 0:
             print Fore.GREEN + 'Your Have Uploaded to FirBbase'
             NoteTakingEntry().upload_firebase()
             print Fore.RESET
@@ -190,20 +221,52 @@ class NoteTaking(Cmd):
             print Fore.RESET
 
 
-    def do_next(self, args):
-        """It is invoked to see the next set of data in the current running query"""
+    def do_next(self, any_args):
 
-        if len(args) == 0:
-            global flag_limit_list
-            global limit_set_list
-            if flag_limit_list != 0:
-                print Fore.GREEN + "Notes:"
-                NoteTakingEntry().next_list_of_notes(flag_limit_list, limit_set_list)
-                flag_limit_list += limit_set_list
-                print Fore.RESET    
+        """It is invoked to see the next set of data in the current running query"""
+        global  what_is_running
+        global flag_limit_search
+
+        if len(any_args) == 0:
+
+            if what_is_running == 1:
+                if len(args) == 0:
+                    global flag_limit_list
+                    global limit_set_list
+                    
+                    if flag_limit_list != 0:
+                        print Fore.GREEN + "Next List of Notes:"
+                        check_if_none = NoteTakingEntry().next_list_of_notes(flag_limit_list, limit_set_list)
+                        flag_limit_list += limit_set_list
+                        print Fore.RESET 
+
+                        if check_if_none is 0:
+                            flag_limit_search = 0
+                            print "No more notes Cannot go to next"   
+                else:
+                    print Fore.YELLOW + "You have to do a search or list and set a limit for this to work"
+                    print Fore.RESET
+            elif what_is_running == 2:
+
+
+                if flag_limit_search != 0:
+                    print Fore.GREEN + "Next Search of Notes:"
+                    check_if_none = NoteTakingEntry().next_search_of_notes(search_query_string, flag_limit_search, limit_set_search)
+                    flag_limit_search += limit_set_search
+                    print Fore.RESET
+                    
+                    if check_if_none is 0:
+                        flag_limit_search = 0
+                        print "No more notes Cannot go to next"
+
+            else:
+                print Fore.YELLOW + "You have to do a search or list and set a limit for this to work"
+                print Fore.RESET
         else:
-            print Fore.YELLOW + "You have to do a search or list and set a limit for this to work"
-            print Fore.RESET
+            print Fore.YELLOW + "Usage: note"
+            print Fore.RESET               
+
+
 
     def do_EOF(self, line):
         return True

@@ -11,8 +11,8 @@ class Database():
     #create connection
 
     def __init__(self):
-        self.conn = sqlite3.connect('E:/andela/bc-7-notetaking/notetaking.db')
-        self.cursor = self.conn.cursor()
+        self.connection = sqlite3.connect('E:/andela/bc-7-notetaking/notetaking.db')
+        self.cursor = self.connection.cursor()
 
 
     def create_table(self): 
@@ -23,7 +23,7 @@ class Database():
             entry
         """
         self.cursor.execute("CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY AUTOINCREMENT,created_at TIMESTAMP, entry TEXT)")
-        self.conn.commit()
+        self.connection.commit()
 
 
     def data_entry(self, note):
@@ -34,7 +34,7 @@ class Database():
             created_at
             note
         """
-        with self.conn:
+        with self.connection:
             self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), note))
 
     
@@ -79,7 +79,7 @@ class Database():
     def delete_note_for_id(self, args):
 
         self.cursor.execute("DELETE FROM notes WHERE id == ('%i')" % (int(args)))
-        self.conn.commit()
+        self.connection.commit()
 
     def upload_notes(self):
        
@@ -122,5 +122,5 @@ class Database():
 
         for row in imported_file:
             third = row['entry']
-            with self.conn:
+            with self.connection:
                 self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))              
