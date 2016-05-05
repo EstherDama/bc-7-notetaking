@@ -25,15 +25,15 @@ class NoteTakingEntry:
 		obj = Database()
 		obj.list_all_from_db()
 
-	def search_string(self, args):
-		note = ''
-		# (" ".join(args['<entry>']))
-
-		for i in args:
-			note += i
-		
+	def list_limit(self, args):
 		obj = Database()
-		obj.search_for_string(note)
+		limit = int(args)
+		obj.list_with_a_limit(limit)
+
+	def search_limit(self, args1, args2):
+		obj = Database()
+		limit = int(args2)
+		obj.search_with_limit(args1, limit)
 
 	def view_one_note(self, args):
 		note = int(args)
@@ -66,3 +66,21 @@ class NoteTakingEntry:
 		obj = Database()
 		alr_exist = obj.import_to_json()
 		return alr_exist
+
+	def next_list_of_notes(self, args1, args2):
+		arg1 = int(args1)
+		arg2 = int(args2)
+		# (" ".join(args['<entry>']))
+		
+		obj = Database()
+		obj.next_for_list_with_limit(arg1,arg2)
+
+	def next_search_of_notes(self, args, args1, args2):
+		args = str(args)
+		arg1 = int(args1)
+		arg2 = int(args2)
+		# (" ".join(args['<entry>']))
+		
+		obj = Database()
+		obj.next_for_search_with_limit(arg1,arg2)
+	

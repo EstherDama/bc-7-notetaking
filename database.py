@@ -1,21 +1,22 @@
-import sqlite3
+#All my imports
+import csv
 import json
+import sqlite3
 import collections
 from datetime import datetime
-import csv
 from firebase import firebase
 
+
 firebase = firebase.FirebaseApplication('https://flickering-inferno-4574.firebaseio.com/', None)
-class Database:
+class Database():
     #create connection
 
     def __init__(self):
         self.conn = sqlite3.connect('E:/andela/bc-7-notetaking/notetaking.db')
         self.cursor = self.conn.cursor()
-        # self.create_table()
 
-
-    def create_table(self):
+    #This is a function that creates a table
+    def create_table(self): 
         """
         Creates table Note Entries
         Columns:
@@ -24,10 +25,8 @@ class Database:
         """
         self.cursor.execute("CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY AUTOINCREMENT,created_at TIMESTAMP, entry TEXT)")
         self.conn.commit()
-        # c.close()
-        # conn.close()
 
-    #insert data into table
+    #This is a function that insert data into table
     def data_entry(self, note):
         """
         Enters data
@@ -39,26 +38,40 @@ class Database:
         with self.conn:
             #insert a row of data
             self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), note))
-            # conn.commit()
 
-
+    #This is a function that has the query insert data into table
     def list_all_from_db(self):
             self.cursor.execute('SELECT * FROM notes')
+
+            for row in self.cursor.fetchall():
+                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+    
+    def list_with_a_limit(self, args):
+            self.cursor.execute("SELECT * FROM notes LIMIT ('%i')" % (int(args)))
             # data = c.fetchall()
             # print data
             for row in self.cursor.fetchall():
                  print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def search_for_string(self, args):
-        a = args
-        # import ipdb
-        # ipdb.set_trace()
-        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%'".format(args))
+    def next_for_list_with_limit(self, args1, args2):
+            self.cursor.execute("SELECT * FROM notes LIMIT '{}','{}'".format(int(args1), int(args2)))
+            for row in self.cursor.fetchall():
+                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
 
+    def search_with_limit(self, args1, args2):
+            self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}'".format(args1, int(args2)))
+            # data = c.fetchall()
+            # print data
+            for row in self.cursor.fetchall():
+                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+
+    def next_for_search_with_limit(self, args, args1, args2):
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}','{}'".format(args, int(args1), int(args2)))
+        # data = c.fetchall()
+        # print data
         for row in self.cursor.fetchall():
-            if a in row[2]:
-                print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+             print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
     def view_note_for_id(self, args):
 
@@ -126,13 +139,9 @@ class Database:
 
         for row in imported_file:
             third = row['entry']
-            try:
-                with self.conn:
-                    #insert a row of data
-                    self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))
-            except sqlite3.IntegrityError:
-                already_exist += 1
-                
+            with self.conn:
+                #insert a row of data
+                self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))              
 
 
 

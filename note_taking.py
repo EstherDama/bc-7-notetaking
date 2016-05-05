@@ -1,55 +1,24 @@
-#Things to add
-# Create a syncnotes command for automatically synchronising notes with online datastore like Firebase or Parse (extra credit)
-# The Notes should be exportable and importable as CSV or JSON.
-
-
 """
-This example uses docopt with the built in cmd module to demonstrate an
-interactive command application.
+This shows how to use the various commands on NoteTaking Console Application
 Usage:
-    journal entry <entry>
-    journal (-i | --interactive)
-    journal (-h | --help | --version)
+    notetaking createnote <entry>
+    notetaking viewnote <note_id>
+    notetaking deletenote <note_id>
+    notetaking searchnote <query_string> [--limit]
+    notetaking listnotes [--limit]
+    notetaking export 
+    notetaking import 
+    notetaking sync 
+
 Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
 """
 
 import sys
-# from docopt import docopt, DocoptExit
 from cmd import Cmd
 from functions import NoteTakingEntry
-
-
-# def docopt_cmd(func):
-#     """
-#     This decorator is used to simplify the try/except block and pass the result
-#     of the docopt parsing to the called action.
-#     """
-#     def fn(self, arg):
-#         try:
-#             opt = docopt(fn.__doc__, arg)
-
-#         except DocoptExit as e:
-#             # The DocoptExit is thrown when the args do not match.
-#             # We print a message to the user and the usage block.
-
-#             print('Invalid Command!')
-#             print(e)
-#             return
-
-#         except SystemExit:
-#             # The SystemExit exception prints the usage for --help
-#             # We do not need to do the print here.
-
-#             return
-
-#         return func(self, opt)
-
-#     fn.__name__ = func.__name__
-#     fn.__doc__ = func.__doc__
-#     fn.__dict__.update(func.__dict__)
-#     return fn
+from colorama import Fore, Back, Style
 
 
 class NoteTaking(Cmd):
@@ -78,12 +47,14 @@ class NoteTaking(Cmd):
             Stores Created Note in Database
         """
         if len(args) == 0:
-            print "Please Enter Data for Note"
+            print Fore.YELLOW + "Usage: createnote <entry>"
+            print Fore.RESET
             return 0
         else:
-            """Usage: entry <entry>..."""
+            """Usage: createnote <entry>"""
             data = NoteTakingEntry().create_note(args)
-            print 'Your Note has been Saved'
+            print Fore.GREEN + 'Your Note has been Saved'
+            print Fore.RESET
             return data
 
 
@@ -92,11 +63,13 @@ class NoteTaking(Cmd):
             Takes an argument  viewnote <note_id>.
             Gets the Note with the specified ID from the Database
         """
-        if len(args) == 0:
-            print "Please Specify the ID for the note you want to view"
-            return 0
-        else:
+        if len(args) == 1:
+            """Usage: viewnote <note_id>"""
             return NoteTakingEntry().view_one_note(args)
+        else:
+            print Fore.YELLOW + "Usage: viewnote <note_id>"
+            print Fore.RESET
+            return 0
 
     def do_deletenote(self, args):
         """ Lets you delete an already existing note.
@@ -105,9 +78,15 @@ class NoteTaking(Cmd):
         """
         #Should display delete after deleting
         if len(args) == 0:
-            print "Please Specify the ID for the note you want to delete"
-        else:
+            print Fore.YELLOW + "Usage: deletenote <note_id>"
+            print Fore.RESET
+        elif len(args):
+            """Usage: deletenote <note_id>"""
             return NoteTakingEntry().delete_one_note(args)
+        else:
+            print Fore.YELLOW + "Usage: viewnote <note_id>"
+            print Fore.RESET
+            return 0
 
     def do_searchnote(self, args):
         """ Lets you search for an already existing note.
@@ -115,10 +94,17 @@ class NoteTaking(Cmd):
             View a formatted list of all the notes that can be identified by the query string
             searchnotes has a --limit parameter for setting the number of items to display in the resulting list
         """
-        if len(args) == 0:
-            print "Please Enter Search String"
+        list_args = args.split()
+        if len(list_args) == 1:
+            """Usage: searchnote <query_string> [--limit]"""
+            return NoteTakingEntry().search_limit(args, -1)
+        elif len(list_args) == 2:
+            search_string = list_args[0]
+            limit_set = list_args[1]
+            return NoteTakingEntry().search_limit(search_string, int(limit_set)) 
         else:
-            return NoteTakingEntry().search_string(args)
+            print Fore.YELLOW + "Usage: searchnote <query_string> [--limit]" 
+            print Fore.RESET
             
 
     def do_listnotes(self, args):
@@ -130,72 +116,92 @@ class NoteTaking(Cmd):
         """
         if len(args) == 0:
             return NoteTakingEntry().list_note()
+        elif len(args) == 1:
+            try:
+                global limit_set_list
+                global flag_limit_list
+                limit_set_list = int(args)
+                flag_limit_list += int(args)
+                print "You have set the limit to: {}".format(limit_set_list) 
+                NoteTakingEntry().list_limit(limit_set_list)
+                #Add things here
+            except ValueError:
+                    print Fore.YELLOW + "Usage: listnotes [--limit]"
+                    print Fore.RESET
+                    return 0
+
         else:
-            print "List Does not accept any arguments"
+            """Usage: listnotes [--limit]"""
+            print Fore.YELLOW + "Usage: listnotes [--limit]"
+            print Fore.RESET
             return 0
 
-    def do_exportjson(self, args):
+    def do_export(self, args):
         """ Lets you export to a JSON file
             Takes no argument.
             Create a .js file with all the db entries
         """
         if len(args) == 0:
+            """Usage: export """
             NoteTakingEntry().export_json()
-            print 'Your Have Exported The current state of the DB to the notetakingObject.json'
+            print Fore.GREEN + 'Your Have Exported The current state of the DB to the notetakingObject.json'
+            print Fore.RESET
             return 0
         else:
-            print "exportjson does not accept any arguments"
+            print Fore.YELLOW + "Usage: export"
+            print Fore.RESET
             return 0
 
 
-    def do_importjson(self, args):
+    def do_import(self, args):
         """ Lets you import from a JSON file
             Takes no argument.
             Populates table from .js file
         """
         if len(args) == 0:
-            already = NoteTakingEntry().import_json()
-            print 'Your Have Imported some values. But {} already Exists'.format(already)
+            """Usage: import """
+            NoteTakingEntry().import_json() 
+            print Fore.GREEN + 'Your Have Imported from JSON'
+            print Fore.RESET
         else:
-            print "importjson does not accept any arguments"
+            print Fore.YELLOW + "Usage: import"
+            print Fore.RESET
             return 0
 
 
-
-    # def do_exportcsv(self, args):
-    #     """ Lets you export to a CSV file
-    #         Takes no argument.
-    #         Create a .csv file with all the db entries
-    #     """
-    #     if len(args) == 0:
-    #         NoteTakingEntry().export_csv()
-    #         print 'Your Have Exported The current state of the DB to the notetaking.csv'
-    #         return 0
-    #     else:
-    #         print "exportcsv does not accept any arguments"
-    #         return 0
-
-    def do_syncnotes(self, args):
+    def do_sync(self, args):
         """ Lets you synchronise with FireBase online datastore
             Takes no argument.
             Create a instance of that db in FireBase
         """
         if len(args) == 0:
+            """Usage: sync """
             NoteTakingEntry().upload_firebase()
-            print 'Your Have Uploaded to FirBbase'
+            print Fore.GREEN + 'Your Have Uploaded to FirBbase'
+            print Fore.RESET
             return 0
         else:
-            print "syncnotes does not accept any arguments"
+            print Fore.YELLOW + "Usage: sync"
+            print Fore.RESET
             return 0
 
 
     def do_next(self, args):
         """It is invoked to see the next set of data in the current running query"""
+
         if len(args) == 0:
-            name = 'Stranger'
+            """Usage: sync """
+            global flag_limit_list
+            global limit_set_list
+            if flag_limit_list != 0:
+                print "this worked"
+                NoteTakingEntry().next_list_of_notes(flag_limit_list, limit_set_list)
+                flag_limit_list += limit_set_list 
+           
         else:
-            name = args
-        print "Hello, %s" % name
+            print Fore.YELLOW + "You have to do a search or list and set a limit for this to work"
+            print Fore.RESET
+            return 0
 
     def do_EOF(self, line):
         return True
@@ -207,11 +213,13 @@ class NoteTaking(Cmd):
 
 
 
+
 def introduction():
     c = ''
     h = ' '
     v = ' '
-    print c + "-" * 78 + c
+    
+    print c + Fore.CYAN + "-" * 78 + c
     print c + "Welcome to NoteTaking Console!".center(78, h) + c
     print c + "-" * 78 + c
     print v + "NOTE TAKINNG COMMANDS".center(78) + v
@@ -221,25 +229,19 @@ def introduction():
     print v + "3 - deletenote".center(78) + v
     print v + "4 - searchnote".center(78) + v
     print v + "5 - listnotes ".center(78) + v
-    print v + "6 - exportjson".center(78) + v
-    print v + "6 - importjson".center(78) + v
-    print v + "6 - syncnotes ".center(78) + v
+    print v + "6 - export    ".center(78) + v
+    print v + "6 - import    ".center(78) + v
+    print v + "7 - syncnotes ".center(78) + v
+    print v + "8 - next      ".center(78) + v
     print c + "-" * 78 + c
     print v + "OTHER COMMANDS".center(78) + v
     print c + "-" * 78 + c
     print v + "1 - quit".center(78) + v
     print v + "2 - help".center(78) + v
     
-    for i in range(1, 7):
-        print v + " " * 78 + v
-    print c + "-" * 78 + c
-
-# opt = docopt(__doc__, sys.argv[1:])
+    # for i in range(1, 7):
+    print v + " " * 78 + v
+    print c + "-" * 78 + c + Fore.RESET
 
 if __name__ == '__main__':
 	NoteTaking().cmdloop()
-
-# if opt['--interactive']:
-#     NoteTaking().cmdloop()
-
-# print(opt)
