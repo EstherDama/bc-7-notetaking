@@ -56,41 +56,43 @@ Usage pattern format
 **Usage pattern** depends on the command you want to execute
 
 - View a specific note 
-.. code:: python
-
-	viewnote (<note_id>)
+```
+	viewnote <note_id>
+```
 
 - Create a single note 
-.. code:: python 
-
+```
 	createnote (<entry>)
+```
 
 
 - Delete a specific note
-.. code:: python 
+``` 
 
 	deletenote (<note_id>)
-
+```
 - Search notes with a query string and optional limit
-.. code:: python 
+``` 
 
 	searchnote (<query_string>) ([--limit])
-
+```
 - List all notes or optional limit of number of notes
-.. code:: python 
+``` 
 
 	listnotes (--limit )
-
+```
 - Import notes from a JSON file
-.. code:: python 
+``` 
 
 	import 
-
+```
 - Export notes to a JSON file
-.. code:: python 
+``` 
 
-	export 
+	export
+``` 
 
 - Manually sync notes with Firebase
-
+```
 	sync 
+```
