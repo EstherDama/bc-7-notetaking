@@ -13,7 +13,6 @@ class NoteTakingEntry:
 		"""
 
 		note = ''
-		# (" ".join(args['<entry>']))
 
 		for i in args:
 			note += i
@@ -21,9 +20,6 @@ class NoteTakingEntry:
 		obj = Database()
 		obj.data_entry(note)
 
-	def list_note(self):
-		obj = Database()
-		obj.list_all_from_db()
 
 	def list_limit(self, args):
 		obj = Database()
@@ -37,7 +33,7 @@ class NoteTakingEntry:
 
 	def view_one_note(self, args):
 		note = int(args)
-		# (" ".join(args['<entry>']))
+
 		
 		obj = Database()
 		obj.view_note_for_id(note)
@@ -45,7 +41,6 @@ class NoteTakingEntry:
 
 	def delete_one_note(self, args):
 		note = int(args)
-		# (" ".join(args['<entry>']))
 		
 		obj = Database()
 		obj.delete_note_for_id(note)
@@ -54,9 +49,6 @@ class NoteTakingEntry:
 		obj = Database()
 		obj.export_to_json()
 
-	# def export_csv(self):
-	# 	obj = Database()
-	# 	obj.export_to_csv()
 
 	def upload_firebase(self):
 		obj = Database()
@@ -70,7 +62,6 @@ class NoteTakingEntry:
 	def next_list_of_notes(self, args1, args2):
 		arg1 = int(args1)
 		arg2 = int(args2)
-		# (" ".join(args['<entry>']))
 		
 		obj = Database()
 		obj.next_for_list_with_limit(arg1,arg2)
@@ -79,7 +70,6 @@ class NoteTakingEntry:
 		args = str(args)
 		arg1 = int(args1)
 		arg2 = int(args2)
-		# (" ".join(args['<entry>']))
 		
 		obj = Database()
 		obj.next_for_search_with_limit(arg1,arg2)

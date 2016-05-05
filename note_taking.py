@@ -9,10 +9,6 @@ Usage:
     notetaking export 
     notetaking import 
     notetaking sync 
-
-Options:
-    -i, --interactive  Interactive Mode
-    -h, --help  Show this screen and exit.
 """
 
 import sys
@@ -38,9 +34,8 @@ class NoteTaking(Cmd):
         Cmd.__init__(self)
         self.prompt = "=>> "
         self.intro  = introduction() 
-        #""  # The defaults is Usually None
-    
-    # @docopt_cmd
+  
+
     def do_createnote(self, args):
         """ Creates a new note.
             Takes an argument  createnote <note_content>.
@@ -49,13 +44,10 @@ class NoteTaking(Cmd):
         if len(args) == 0:
             print Fore.YELLOW + "Usage: createnote <entry>"
             print Fore.RESET
-            return 0
         else:
-            """Usage: createnote <entry>"""
-            data = NoteTakingEntry().create_note(args)
+            NoteTakingEntry().create_note(args)
             print Fore.GREEN + 'Your Note has been Saved'
             print Fore.RESET
-            return data
 
 
     def do_viewnote(self, args):
@@ -63,30 +55,38 @@ class NoteTaking(Cmd):
             Takes an argument  viewnote <note_id>.
             Gets the Note with the specified ID from the Database
         """
-        if len(args) == 1:
-            """Usage: viewnote <note_id>"""
-            return NoteTakingEntry().view_one_note(args)
+        list_args = args.split()
+        if len(list_args) == 1:
+            try:
+                print Fore.GREEN + 'Note:'
+                NoteTakingEntry().view_one_note(args)
+                print Fore.RESET
+            except ValueError:
+                print Fore.YELLOW + "Usage: viewnote <note_id>"
+                print Fore.RESET
         else:
             print Fore.YELLOW + "Usage: viewnote <note_id>"
             print Fore.RESET
-            return 0
+
 
     def do_deletenote(self, args):
         """ Lets you delete an already existing note.
             Takes an argument  deletenote <note_id>.
             Deletes the Note with the specified ID from the Database
         """
-        #Should display delete after deleting
-        if len(args) == 0:
-            print Fore.YELLOW + "Usage: deletenote <note_id>"
-            print Fore.RESET
-        elif len(args):
-            """Usage: deletenote <note_id>"""
-            return NoteTakingEntry().delete_one_note(args)
+        list_args = args.split()
+        if len(list_args) == 1:
+            try:
+                print Fore.GREEN + 'Deleted Note:{}'.format(args)
+                NoteTakingEntry().delete_one_note(args)
+                print Fore.RESET
+            except ValueError:
+                print Fore.YELLOW + """Usage: deletenote <note_id>"""
+                print Fore.RESET
+
         else:
-            print Fore.YELLOW + "Usage: viewnote <note_id>"
+            print Fore.YELLOW + """Usage: deletenote <note_id>"""
             print Fore.RESET
-            return 0
 
     def do_searchnote(self, args):
         """ Lets you search for an already existing note.
@@ -96,12 +96,18 @@ class NoteTaking(Cmd):
         """
         list_args = args.split()
         if len(list_args) == 1:
-            """Usage: searchnote <query_string> [--limit]"""
-            return NoteTakingEntry().search_limit(args, -1)
+            NoteTakingEntry().search_limit(args, -1)
         elif len(list_args) == 2:
-            search_string = list_args[0]
-            limit_set = list_args[1]
-            return NoteTakingEntry().search_limit(search_string, int(limit_set)) 
+            try:
+                search_string = list_args[0]
+                limit_set = list_args[1]
+                print Fore.GREEN + "Notes:"
+                NoteTakingEntry().search_limit(search_string, int(limit_set)) 
+                print Fore.RESET
+            except ValueError:
+                print Fore.YELLOW + "Usage: searchnote <query_string> [--limit]" 
+                print Fore.RESET
+
         else:
             print Fore.YELLOW + "Usage: searchnote <query_string> [--limit]" 
             print Fore.RESET
@@ -114,27 +120,30 @@ class NoteTaking(Cmd):
             listnotes has a --limit parameter for setting the number of items to display in the resulting list
 
         """
-        if len(args) == 0:
-            return NoteTakingEntry().list_note()
-        elif len(args) == 1:
+        list_args = args.split()
+        if len(list_args) == 0:
+            print Fore.GREEN + "Notes:"
+            NoteTakingEntry().list_limit(-1)
+            print Fore.RESET
+        elif len(list_args) == 1:
             try:
                 global limit_set_list
                 global flag_limit_list
                 limit_set_list = int(args)
                 flag_limit_list += int(args)
-                print "You have set the limit to: {}".format(limit_set_list) 
+
+                print Fore.GREEN + "You have set the limit to: {}".format(limit_set_list) 
                 NoteTakingEntry().list_limit(limit_set_list)
+                print Fore.RESET
                 #Add things here
             except ValueError:
                     print Fore.YELLOW + "Usage: listnotes [--limit]"
                     print Fore.RESET
-                    return 0
 
         else:
-            """Usage: listnotes [--limit]"""
             print Fore.YELLOW + "Usage: listnotes [--limit]"
             print Fore.RESET
-            return 0
+
 
     def do_export(self, args):
         """ Lets you export to a JSON file
@@ -142,15 +151,12 @@ class NoteTaking(Cmd):
             Create a .js file with all the db entries
         """
         if len(args) == 0:
-            """Usage: export """
-            NoteTakingEntry().export_json()
             print Fore.GREEN + 'Your Have Exported The current state of the DB to the notetakingObject.json'
+            NoteTakingEntry().export_json()
             print Fore.RESET
-            return 0
         else:
             print Fore.YELLOW + "Usage: export"
             print Fore.RESET
-            return 0
 
 
     def do_import(self, args):
@@ -159,14 +165,12 @@ class NoteTaking(Cmd):
             Populates table from .js file
         """
         if len(args) == 0:
-            """Usage: import """
-            NoteTakingEntry().import_json() 
             print Fore.GREEN + 'Your Have Imported from JSON'
+            NoteTakingEntry().import_json() 
             print Fore.RESET
         else:
             print Fore.YELLOW + "Usage: import"
             print Fore.RESET
-            return 0
 
 
     def do_sync(self, args):
@@ -175,33 +179,29 @@ class NoteTaking(Cmd):
             Create a instance of that db in FireBase
         """
         if len(args) == 0:
-            """Usage: sync """
-            NoteTakingEntry().upload_firebase()
             print Fore.GREEN + 'Your Have Uploaded to FirBbase'
+            NoteTakingEntry().upload_firebase()
             print Fore.RESET
-            return 0
+
         else:
             print Fore.YELLOW + "Usage: sync"
             print Fore.RESET
-            return 0
 
 
     def do_next(self, args):
         """It is invoked to see the next set of data in the current running query"""
 
         if len(args) == 0:
-            """Usage: sync """
             global flag_limit_list
             global limit_set_list
             if flag_limit_list != 0:
-                print "this worked"
+                print Fore.GREEN + "Notes:"
                 NoteTakingEntry().next_list_of_notes(flag_limit_list, limit_set_list)
-                flag_limit_list += limit_set_list 
-           
+                flag_limit_list += limit_set_list
+                print Fore.RESET    
         else:
             print Fore.YELLOW + "You have to do a search or list and set a limit for this to work"
             print Fore.RESET
-            return 0
 
     def do_EOF(self, line):
         return True
@@ -209,6 +209,9 @@ class NoteTaking(Cmd):
     def do_quit(self, args):
         """Quits the program."""
         print "Quitting..."
+        raise SystemExit
+
+    def do_exit(self, args):
         raise SystemExit
 
 
@@ -231,13 +234,16 @@ def introduction():
     print v + "5 - listnotes ".center(78) + v
     print v + "6 - export    ".center(78) + v
     print v + "6 - import    ".center(78) + v
-    print v + "7 - syncnotes ".center(78) + v
+    print v + "7 - sync      ".center(78) + v
     print v + "8 - next      ".center(78) + v
     print c + "-" * 78 + c
     print v + "OTHER COMMANDS".center(78) + v
     print c + "-" * 78 + c
-    print v + "1 - quit".center(78) + v
-    print v + "2 - help".center(78) + v
+    print v + "1 - help".center(78) + v
+    print v + "2 - quit".center(78) + v
+    print v + "3 - EOF ".center(78) + v
+    print v + "4 - exit".center(78) + v
+
     
     # for i in range(1, 7):
     print v + " " * 78 + v
