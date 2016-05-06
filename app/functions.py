@@ -50,12 +50,17 @@ class NoteTakingEntry:
 		note = int(note_id)
 		obj.delete_note_for_id(note)
 
-	def export_json(self):
+	def export_json(self, filename):
 		"""
 		Exports to a JSON file the current state of the database 
 
 		"""
-		obj.export_to_json()
+		filename_to_export = str(filename)
+		if len(filename) != 0:
+			obj.export_to_json_with_filename(filename)
+
+		else: 
+			obj.export_to_json()
 
 
 	def upload_firebase(self):

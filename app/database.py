@@ -1,4 +1,3 @@
-import csv
 import json
 import sqlite3
 import collections
@@ -125,6 +124,23 @@ class Database():
          
         j = json.dumps(objects_list)
         objects_file = 'notetakingObject.json'
+        f = open(objects_file,'w')
+        print >> f, j
+
+    def export_to_json_with_filename(self, filename):
+        """When a file is specified
+        """
+        rows = self.cursor.execute("SELECT * FROM notes ") 
+ 
+        objects_list = []
+        for row in rows:
+            d = collections.OrderedDict()
+            d['id'] = row[0]
+            d['created_at'] = row[1]
+            d['entry'] = row[2]
+            objects_list.append(d)
+        j = json.dumps(objects_list)
+        objects_file = str(filename)
         f = open(objects_file,'w')
         print >> f, j
 

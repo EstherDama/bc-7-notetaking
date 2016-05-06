@@ -180,12 +180,12 @@ class NoteTaking(Cmd):
             NoteTakingEntry().export_json()
             print Fore.RESET
 
-        # elif len(list_args) ==1:
-
-        #     print "I should work on this!!!!"
-
+        elif len(list_args) ==1:
+            print Fore.GREEN + 'Your Have Exported The current state of the DB to the {}'.format(list_args)
+            NoteTakingEntry().export_json(file_name)
+            print Fore.RESET
         else:
-            print Fore.YELLOW + "Usage: export"
+            print Fore.YELLOW + "Usage: export [filename]"
             print Fore.RESET
 
 
@@ -230,7 +230,7 @@ class NoteTaking(Cmd):
         if len(any_args) == 0:
 
             if what_is_running == 1:
-                if len(args) == 0:
+                if len(any_args) == 0:
                     global flag_limit_list
                     global limit_set_list
                     

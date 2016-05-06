@@ -11,8 +11,8 @@ Python ``NoTa`` *Console application*
   *  Allows search of notes with a search string
   *  Allows listing of all notes or a few notes set by your limit
   *  Allows exporting to a JSON file
-  *  Image importing from a JSON file
-  *  Image syncing of notes with online datastore
+  *  Allows importing from a JSON file
+  *  Allows syncing of notes with online datastore
   *  Allows for next to show next results of the currently executing query 
 
 **NoTa** allows you quickly create short notes, allows for easy manipulation of the notes and back-up notes on FireBase.
