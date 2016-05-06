@@ -13,14 +13,6 @@ class Database():
         self.connection = sqlite3.connect('notetaking.db')
         self.cursor = self.connection.cursor()
 
-
-    def create_table(self): 
-        """
-        Creates table NoteEntries
-        Columns:
-            created_at
-            entry
-        """
         self.cursor.execute("CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY AUTOINCREMENT,created_at TIMESTAMP, entry TEXT)")
         self.connection.commit()
 
