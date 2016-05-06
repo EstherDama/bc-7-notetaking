@@ -106,6 +106,7 @@ class NoteTaking(Cmd):
         global flag_limit_search
         global search_query_string        
         list_args = var_args.split()
+
         if len(list_args) == 1:
             print Fore.GREEN + "Notes:"
             NoteTakingEntry().search_limit(var_args, -1)
@@ -143,6 +144,7 @@ class NoteTaking(Cmd):
 
         """
         list_args = var_args.split()
+
         if len(list_args) == 0:
             print Fore.GREEN + "Notes:"
             NoteTakingEntry().list_limit(-1)
@@ -214,10 +216,16 @@ class NoteTaking(Cmd):
             Takes no argument.
             Create a instance of that db in FireBase
         """
-        if len(any_args) == 0:
-            print Fore.GREEN + 'Your Have Uploaded to FirBbase'
-            NoteTakingEntry().upload_firebase()
+        try:
+            if len(any_args) == 0:
+
+                print Fore.GREEN + 'Your Have Uploaded to FirBbase'
+                NoteTakingEntry().upload_firebase()
+                print Fore.RESET
+        except ConnectionError as e:
+            print Fore.YELLOW + "Connection Error"
             print Fore.RESET
+
 
         else:
             print Fore.YELLOW + "Usage: sync"
