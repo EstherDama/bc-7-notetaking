@@ -47,41 +47,52 @@ class Database():
         for row in self.cursor.fetchall():
              print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def next_for_list_with_limit(self, args1, args2):
-            self.cursor.execute("SELECT * FROM notes LIMIT '{}','{}'".format(int(args1), int(args2)))
-            for row in self.cursor.fetchall():
-                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
+    def next_for_list_with_limit(self, where_to_start, how_many):
+        """
+        Add next functionality to list of notes which have a limit
+        """
+        self.cursor.execute("SELECT * FROM notes LIMIT '{}','{}'".format(int(where_to_start), int(how_many)))
+        for row in self.cursor.fetchall():
+             print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
 
-    def search_with_limit(self, args1, args2):
+    def search_with_limit(self, what_to_search, how_many):
         """
         Query to give a list of notes searched by a key value
         If No limit is passed then everything is displayed
         """
-        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}'".format(args1, int(args2)))
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}'".format(what_to_search, int(how_many)))
         for row in self.cursor.fetchall():
              print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def next_for_search_with_limit(self, args, args1, count):
-        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}','{}'".format(args, int(args1), int(count)))
+    def next_for_search_with_limit(self, what_to_search, where_to_start, count):
+        """
+        Add next functionality to search of notes which have a limit
+        """
+        self.cursor.execute("SELECT * FROM notes WHERE entry LIKE '%{}%' LIMIT '{}','{}'".format(what_to_search, int(where_to_start), int(count)))
         for row in self.cursor.fetchall():
              print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def view_note_for_id(self, args):
+    def view_note_for_id(self, note_id):
         """
-        Query to give a list of notes searched by a key value
-        If No limit is passed then everything is displayed
+        Query for getting the row that has the specified ID
         """
-        self.cursor.execute("SELECT * FROM notes WHERE id == ('%i')" % (int(args)))
+        self.cursor.execute("SELECT * FROM notes WHERE id == ('%i')" % (int(note_id)))
         for row in self.cursor.fetchall():
                 print '{0} : {1}, {2}'.format(row[0], row[1], row[2])
 
-    def delete_note_for_id(self, args):
+    def delete_note_for_id(self, note_id):
+        """
+        Query for deleting the row that has the specified ID
+        """
 
-        self.cursor.execute("DELETE FROM notes WHERE id == ('%i')" % (int(args)))
+        self.cursor.execute("DELETE FROM notes WHERE id == ('%i')" % (int(note_id)))
         self.connection.commit()
 
     def upload_notes(self):
+        """
+        Gets current data on DB and uploads to FireBase
+        """
        
         rows = self.cursor.execute("SELECT * FROM notes ")
 
@@ -98,6 +109,9 @@ class Database():
 
 
     def export_to_json(self):
+        """
+        Gets current data on DB and saves in a JSON file with JSON format
+        """
 
         rows = self.cursor.execute("SELECT * FROM notes ") 
  
@@ -116,7 +130,9 @@ class Database():
 
 
     def import_to_json(self): 
-        
+        """
+        Adds data to databse using a JSON file
+        """
         json_file = "import.json"
         imported_file = json.load(open(json_file))
 

@@ -5,67 +5,92 @@ obj = Database()
 class NoteTakingEntry:
 	
 
-	def create_note(self, args):
+	def create_note(self, entry):
 		"""
 		Add text to one note instance 
 
 		"""
-
 		note = ''
 
-		for i in args:
+		for i in entry:
 			note += i
-		obj.data_entry(note)
+		obj.data_entry(entry)
 
 
-	def list_limit(self, args):
+	def list_limit(self, limit_passed):
+		"""
+		Give query results of a listnotes if no limit is given then give all
 
-		obj = Database()
-		limit = int(args)
+		"""
+		limit = int(limit_passed)
 		obj.list_with_a_limit(limit)
 
-	def search_limit(self, args1, args2):
-		obj = Database()
-		limit = int(args2)
-		obj.search_with_limit(args1, limit)
+	def search_limit(self, query_string, limit_passed):
+		"""
+		Give query results of a searchnotes if no limit is given then give all
 
-	def view_one_note(self, args):
-		note = int(args)
+		"""		
+		limit = int(limit_passed)
+		obj.search_with_limit(query_string, limit)
 
-		
-		obj = Database()
+	def view_one_note(self, note_id):
+		"""
+		Gives a row of one item with the specified ID 
+
+		"""
+		note = int (note_id)
 		obj.view_note_for_id(note)
 
 
-	def delete_one_note(self, args):
-		note = int(args)
-		
-		obj = Database()
+	def delete_one_note(self, note_id):
+		"""
+		Deletes a row of one item with the specified ID  
+
+		"""
+		note = int(note_id)
 		obj.delete_note_for_id(note)
 
 	def export_json(self):
-		obj = Database()
+		"""
+		Exports to a JSON file the current state of the database 
+
+		"""
 		obj.export_to_json()
 
 
 	def upload_firebase(self):
-		obj = Database()
+		"""
+		Trasfers Data to FireBase
+
+		"""
 		obj.upload_notes()
 
 	def import_json(self):
+		"""
+		Imports Data to the database from an JSON file
+
+		"""
 		alr_exist = obj.import_to_json()
 		return alr_exist
 
-	def next_list_of_notes(self, args1, args2):
-		arg1 = int(args1)
-		arg2 = int(args2)
+	def next_list_of_notes(self, start_from, count):
+		"""
+		Adds feature of next to listnotes command
 
-		obj.next_for_list_with_limit(arg1,arg2)
+		"""
+		where_to_start = int(start_from)
+		how_many = int(count)
 
-	def next_search_of_notes(self, args, args1, args2):
-		args = str(args)
-		arg1 = int(args1)
-		arg2 = int(args2)
+		obj.next_for_list_with_limit(where_to_start, how_many)
+
+	def next_search_of_notes(self, query_string, start_from, count):
+		"""
+		Adds feature of next to listnotes command
+
+		"""
+		what_to_search = str(query_string)
+		where_to_start = int(start_from)
+		how_many = int(count)
 		
-		obj.next_for_search_with_limit(args, arg1, arg2)
+		obj.next_for_search_with_limit(what_to_search, where_to_start, how_many)
 	
