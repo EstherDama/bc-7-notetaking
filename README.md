@@ -3,7 +3,7 @@ Python ``NoTa`` *Console application*
 ======================================================================
 
 ## Introduction
-*  **`NoteTaking`** is a Python Console Application.
+*  **`NoTa`** is a Python Console Application.
 *  These are its features;
   *  Allows the creation of notes
   *  Allows the viewing of a note using its specific id
@@ -15,7 +15,7 @@ Python ``NoTa`` *Console application*
   *  Image syncing of notes with online datastore
   *  Allows for next to show next results of the currently executing query 
 
-**NoteTaking** allows you quickly create short notes, allows for easy manipulation of the notes and back-up notes on FireBase.
+**NoTa** allows you quickly create short notes, allows for easy manipulation of the notes and back-up notes on FireBase.
 
 
 Commands for the program
@@ -49,6 +49,8 @@ Testing
 You can run unit tests preferably by installing nosetest and run from root of the folder:
 
     nosetests
+Ran 2 tests and they are OK
+
 
 Usage pattern format
 ----------------------------------------------------------------------

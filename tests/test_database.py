@@ -1,31 +1,26 @@
-# import unittest
-# from database import Database
-# from functions import NoteTakingEntry
+import unittest
+from app.database import Database
+from app.functions import NoteTakingEntry
+from app.note_taking import NoteTaking
 
-# """Test Suite for testing database operations 
-# """
+"""Test Suite for testing database operations 
+"""
 
-# dbmgr = Database()
-# dbconnect = NoteTakingEntry()
-# class DatabaseTests(unittest.TestCase):
-
-
-#     def test_delete(self):     
-#         """ Tests whether an inserted record can be deleted
-#         """
-#         dbmgr.data_entry("testdelete")
-#         cursor = dbmgr.search_with_limit("testdelete", -1)
-#         note = dbmgr.delete_note_for_id(cursor[0])
-#         self.assertGreater(note, 0)
+dbmgr = Database()
+dbconnect = NoteTakingEntry()
+class DatabaseTests(unittest.TestCase):
 
 
+    def test_search(self):     
+        """ Tests whether an inserted record can be deleted
+        """
+        dbmgr.data_entry("test delete")
+        self.assertEqual(dbmgr.search_with_limit("test delete", -1), NoteTakingEntry().search_limit("test delete" ,-1))
 
-#     def test_save(self):
-#         """ Tests whether an inserted record can be sought
-#         """ 
-#         note = dbmgr.data_entry("testrecordsave")       
-#         notes = dbmgr.search_with_limit("testrecordsave", -1)
-#         self.assertEqual(notes[2], "testrecordsave")
 
-#         """ Tests whether an inserted record can be sought
-#         """
+
+    def test_save(self):
+        """ Tests whether an inserted record can be sought
+        """ 
+        dbmgr.data_entry("test record another test")      
+        self.assertEqual(NoteTakingEntry().search_limit("test record another test" ,-1), dbmgr.search_with_limit("test record another test", -1))
