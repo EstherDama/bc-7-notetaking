@@ -10,7 +10,7 @@ class Database():
     #create connection
 
     def __init__(self):
-        self.connection = sqlite3.connect('E:/andela/bc-7-notetaking/notetaking.db')
+        self.connection = sqlite3.connect('notetaking.db')
         self.cursor = self.connection.cursor()
 
 
@@ -155,4 +155,6 @@ class Database():
         for row in imported_file:
             third = row['entry']
             with self.connection:
-                self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))              
+                self.cursor.execute("INSERT INTO notes (created_at, entry) VALUES ('%s', '%s')" % (datetime.now(), third))     
+
+

@@ -200,7 +200,10 @@ class NoteTaking(Cmd):
             NoteTakingEntry().import_json() 
             print Fore.RESET
         elif len(list_args) ==1:
-            print "I should work on this!!!!"        
+             # NoteTakingEntry().import_json_file(file_name)
+             print "this wasnt done"
+
+                    
         else:
             print Fore.YELLOW + "Usage: import"
             print Fore.RESET
