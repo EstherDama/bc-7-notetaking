@@ -1,5 +1,5 @@
 # bc-7-notetaking
-Python ``NoteTaking`` *Console application* 
+Python ``NoTa`` *Console application* 
 ======================================================================
 
 ## Introduction

@@ -286,9 +286,15 @@ def introduction():
     c = ''
     h = ' '
     v = ' '
-    
-    print c + Fore.CYAN + "-" * 78 + c
-    print c + "Welcome to NoteTaking Console!".center(78, h) + c
+
+
+    print c + "-" * 78 + c
+    print " _       _____  _____       ".center(78, h) + c
+    print "| \   | |     |   |    /\   ".center(78, h) + c
+    print "|  \  | |     |   |   /__\  ".center(78, h) + c
+    print "|   \_| |_____|   |  /    \ ".center(78, h) + c
+    print c + "-" * 78 + c
+    print c + "Welcome to NoTa Console!".center(78, h) + c
     print c + "-" * 78 + c
     print v + "NOTE TAKINNG COMMANDS".center(78) + v
     print c + "-" * 78 + c
@@ -312,7 +318,7 @@ def introduction():
     
     # for i in range(1, 7):
     print v + " " * 78 + v
-    print c + "-" * 78 + c + Fore.RESET
+    print c + "-" * 78 + c 
 
 if __name__ == '__main__':
 	NoteTaking().cmdloop()
